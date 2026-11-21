@@ -2,39 +2,83 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#7a1f2b">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#3a0d14">
 <link rel="manifest" href="manifest.json">
-<title>Suivi Repas et Muscu</title>
+<title>AHOSSi Suivi</title>
 <style>
-*{box-sizing:border-box}
-body{margin:0;font-family:system-ui,sans-serif;background:#1a1a1a;color:#f2ece8}
-.app{max-width:480px;margin:0 auto;padding:12px}
-header{display:flex;justify-content:space-between;align-items:center;gap:8px}
-h1{font-size:1.1rem;color:#d9a05b}
-h2{font-size:1rem;margin-top:18px;color:#d9a05b}
-nav{display:flex;gap:6px;margin:10px 0}
-nav button{flex:1;padding:10px 4px;border:0;border-radius:8px;background:#2c2c2c;color:#f2ece8}
-nav button.actif{background:#7a1f2b}
-select,input,textarea{padding:8px;margin:4px 4px 4px 0;border-radius:6px;border:1px solid #444;background:#2c2c2c;color:#f2ece8}
-textarea{width:100%;min-height:110px;font-family:inherit}
-button{padding:8px 12px;border:0;border-radius:6px;background:#7a1f2b;color:#fff}
-.ligne{margin:6px 0;font-size:.9rem}
-.barre{height:8px;background:#2c2c2c;border-radius:4px;overflow:hidden}
-.barre div{height:100%;background:#5f8f4e}
-.repas,.exo{display:block;padding:8px;margin:6px 0;background:#2c2c2c;border-radius:8px}
-.exo{display:flex;gap:8px;align-items:center}
-.info{color:#d9a05b}
-.coller{background:#232323;border:1px dashed #d9a05b;border-radius:8px;padding:8px;margin:8px 0}
-form{display:flex;flex-wrap:wrap;gap:4px}
+:root{--bordeaux:#7a1f2b;--bordeaux-fonce:#3a0d14;--noir:#120a0c;--carte:#1e1316;--carte2:#2a1a1e;--or:#d9a05b;--or-clair:#f0c987;--vert:#5f9e4e;--texte:#f5ece6;--gris:#a89a95}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;font-family:system-ui,-apple-system,Segoe UI,sans-serif;background:var(--noir);color:var(--texte);padding-bottom:84px}
+.app{max-width:480px;margin:0 auto}
+.entete{background:linear-gradient(160deg,var(--bordeaux) 0%,var(--bordeaux-fonce) 100%);padding:22px 18px 26px;border-radius:0 0 28px 28px;box-shadow:0 8px 24px rgba(0,0,0,.45)}
+.marque{display:flex;align-items:center;gap:12px}
+.logo{width:46px;height:46px;border-radius:14px;background:linear-gradient(135deg,var(--or-clair),var(--or));display:flex;align-items:center;justify-content:center;font-size:24px;box-shadow:0 4px 12px rgba(0,0,0,.4)}
+.marque h1{margin:0;font-size:1.15rem;letter-spacing:.3px}
+.marque small{color:var(--or-clair);font-size:.78rem;letter-spacing:1.5px;text-transform:uppercase}
+.date-ligne{display:flex;justify-content:space-between;align-items:center;margin-top:16px;gap:10px}
+.date-ligne input{background:rgba(0,0,0,.3);border:1px solid rgba(217,160,91,.4);color:var(--texte);border-radius:12px;padding:9px 12px;font-size:.95rem}
+.badge{background:rgba(217,160,91,.18);border:1px solid rgba(217,160,91,.5);color:var(--or-clair);padding:8px 12px;border-radius:20px;font-size:.82rem;font-weight:600}
+.page{padding:16px}
+.carte{background:linear-gradient(145deg,var(--carte2),var(--carte));border:1px solid rgba(217,160,91,.15);border-radius:20px;padding:16px;margin-bottom:14px;box-shadow:0 6px 18px rgba(0,0,0,.35)}
+.carte h2{margin:0 0 12px;font-size:.95rem;color:var(--or);letter-spacing:.8px;text-transform:uppercase;display:flex;align-items:center;gap:8px}
+.anneaux{display:flex;justify-content:space-around;gap:6px}
+.anneau{text-align:center}
+.anneau .rond{width:84px;height:84px;border-radius:50%;display:flex;align-items:center;justify-content:center;position:relative}
+.anneau .rond::before{content:'';position:absolute;inset:8px;background:var(--carte);border-radius:50%}
+.anneau .rond span{position:relative;font-weight:700;font-size:.95rem}
+.anneau b{display:block;margin-top:6px;font-size:.78rem;color:var(--gris);font-weight:600}
+.anneau i{display:block;font-style:normal;font-size:.72rem;color:var(--gris)}
+.micro{margin:9px 0;font-size:.85rem}
+.micro .tete{display:flex;justify-content:space-between;margin-bottom:4px}
+.micro .tete em{font-style:normal;color:var(--gris)}
+.barre{height:8px;background:#0e0709;border-radius:6px;overflow:hidden}
+.barre div{height:100%;border-radius:6px;background:linear-gradient(90deg,var(--vert),#8bc66f)}
+.macro-or .barre div{background:linear-gradient(90deg,var(--or),var(--or-clair))}
+select,input,textarea{background:#140c0e;color:var(--texte);border:1px solid rgba(217,160,91,.3);border-radius:12px;padding:11px;font-size:.95rem;font-family:inherit;margin:4px 0;max-width:100%}
+textarea{width:100%;min-height:110px}
+select{width:100%}
+.rang{display:flex;gap:8px;align-items:center}
+.rang input{flex:1;min-width:0}
+button{border:0;border-radius:12px;padding:11px 16px;font-weight:700;color:#fff;background:linear-gradient(135deg,var(--bordeaux),#a12a3b);box-shadow:0 4px 10px rgba(122,31,43,.45);font-size:.92rem}
+button.or{background:linear-gradient(135deg,var(--or),var(--or-clair));color:#2a1208;box-shadow:0 4px 10px rgba(217,160,91,.3)}
+button.petit{padding:7px 10px;font-size:.78rem;background:#3a2328;box-shadow:none;font-weight:600}
+.large{width:100%;margin-top:8px}
+.coller{border:1.5px dashed rgba(217,160,91,.55);background:rgba(217,160,91,.06)}
+.info{color:var(--or-clair);font-size:.85rem;margin:8px 0 0}
+.repas{background:#170e11;border-radius:14px;padding:11px;margin:8px 0;border-left:4px solid var(--bordeaux)}
+.repas .haut{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.repas .nom{font-weight:700}
+.repas .moment{font-size:.72rem;color:var(--or);text-transform:uppercase;letter-spacing:1px}
+.repas .det{display:flex;gap:8px;align-items:center;margin-top:6px;font-size:.82rem;color:var(--gris)}
+.repas input{width:80px;padding:6px 8px;margin:0}
+.exo{display:flex;gap:12px;align-items:center;background:#170e11;border-radius:14px;padding:13px;margin:8px 0;border-left:4px solid var(--vert)}
+.exo input{width:24px;height:24px;accent-color:var(--vert);flex:none;margin:0}
+.exo .t{font-weight:700}
+.exo .s{font-size:.82rem;color:var(--gris);margin-top:2px}
+.repos{text-align:center;padding:30px 10px}
+.repos .gros{font-size:3rem}
+.progres{display:flex;align-items:center;gap:10px;margin-bottom:10px;font-size:.88rem;color:var(--gris)}
+.progres .barre{flex:1}
+form.grille{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+form.grille input.plein,form.grille button{grid-column:1/-1}
+.jour-hist{background:#170e11;border-radius:14px;padding:12px;margin:8px 0;border-left:4px solid var(--or)}
+.jour-hist b{color:var(--or-clair)}
+.bas{position:fixed;left:0;right:0;bottom:0;background:linear-gradient(180deg,#1b0f12,#0d0708);border-top:1px solid rgba(217,160,91,.25);display:flex;justify-content:space-around;padding:8px 4px calc(8px + env(safe-area-inset-bottom));z-index:10}
+.bas button{background:none;box-shadow:none;color:var(--gris);display:flex;flex-direction:column;align-items:center;gap:2px;font-size:.72rem;font-weight:600;padding:6px 10px;border-radius:14px}
+.bas button span{font-size:1.4rem}
+.bas button.actif{color:var(--or-clair);background:rgba(122,31,43,.55)}
 </style>
 </head>
 <body>
 <div class="app">
-<header><h1>Suivi Repas et Muscu</h1><input type="date" id="jour"></header>
-<nav id="nav"></nav>
-<div id="contenu"></div>
+<div class="entete">
+<div class="marque"><div class="logo">🌾</div><div><h1>AHOSSi agropreneur</h1><small>Nutrition &amp; Muscu</small></div></div>
+<div class="date-ligne"><input type="date" id="jour"><div class="badge" id="badge"></div></div>
 </div>
+<div class="page" id="contenu"></div>
+</div>
+<div class="bas" id="nav"></div>
 <script>
 const FOODS=[
 {id:'riz',nom:'Riz cuit',kcal:130,p:2.7,g:28,l:0.3,zn:0.5,mg:12,fe:0.2,ca:10,b12:0},
@@ -63,6 +107,7 @@ const PROGRAM={
 };
 const OBJ={kcal:2900,p:140,g:380,l:90,zn:11,mg:400,fe:8,ca:1000,b12:2.4};
 const CH=[['kcal','Calories','kcal'],['p','Protéines','g'],['g','Glucides','g'],['l','Lipides','g'],['zn','Zinc','mg'],['mg','Magnésium','mg'],['fe','Fer','mg'],['ca','Calcium','mg'],['b12','Vitamine B12','µg']];
+const MOMENTS=['Petit-déjeuner','Repas','Collation','Dîner','Avant coucher'];
 const CLE='suivi-muscu-v1';
 let D;try{D=JSON.parse(localStorage.getItem(CLE))}catch(e){}
 D=D||{repas:{},seances:{},aliments:[],poids:{}};
@@ -74,24 +119,29 @@ const norm=s=>s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').re
 function val(a,g){const r={};CH.forEach(c=>r[c[0]]=(a[c[0]]||0)*g/100);return r}
 function total(liste){const t={};CH.forEach(c=>t[c[0]]=0);liste.forEach(r=>{const a=tous().find(x=>x.id===r.alimentId);if(!a)return;const v=val(a,r.grammes);CH.forEach(c=>t[c[0]]+=v[c[0]])});return t}
 function trouver(nom){const n=norm(nom);let a=tous().find(x=>norm(x.nom)===n);if(a)return a;a=tous().find(x=>norm(x.nom).includes(n)||n.includes(norm(x.nom)));if(a)return a;const mots=n.split(' ').filter(m=>m.length>3);return tous().find(x=>mots.some(m=>norm(x.nom).includes(m)))}
-function nav(){const n=[['aujourdhui',"Aujourd'hui"],['seance','Séance'],['aliments','Aliments'],['historique','Historique']];
-document.getElementById('nav').innerHTML=n.map(o=>`<button class="${onglet===o[0]?'actif':''}" onclick="onglet='${o[0]}';rendre()">${o[1]}</button>`).join('')}
+function anneau(cle,nom,unite,couleur,t){const p=Math.min(100,t[cle]/OBJ[cle]*100);return `<div class="anneau"><div class="rond" style="background:conic-gradient(${couleur} ${p*3.6}deg,#0e0709 0deg)"><span>${Math.round(p)}%</span></div><b>${nom}</b><i>${t[cle].toFixed(cle==='kcal'?0:1)} / ${OBJ[cle]} ${unite}</i></div>`}
+function nav(){const n=[['aujourdhui','🍽️',"Aujourd'hui"],['seance','💪','Séance'],['aliments','🥗','Aliments'],['historique','📈','Historique']];
+document.getElementById('nav').innerHTML=n.map(o=>`<button class="${onglet===o[0]?'actif':''}" onclick="onglet='${o[0]}';rendre();window.scrollTo(0,0)"><span>${o[1]}</span>${o[2]}</button>`).join('')}
 function rendre(){nav();document.getElementById('jour').value=jour;
+const num=new Date(jour+'T12:00:00').getDay();const s=PROGRAM[num];const co=D.seances[jour]||{};
+document.getElementById('badge').textContent=s.exos.length?s.jour+' · '+s.titre:s.jour+' · Repos';
 const c=document.getElementById('contenu');
 const rj=D.repas[jour]||[];const t=total(rj);
-const num=new Date(jour+'T12:00:00').getDay();const s=PROGRAM[num];const co=D.seances[jour]||{};
 if(onglet==='aujourdhui'){
-c.innerHTML='<h2>Totaux du jour</h2>'+CH.map(x=>{const p=Math.min(100,t[x[0]]/OBJ[x[0]]*100);return `<div class="ligne">${x[1]} : ${t[x[0]].toFixed(1)} / ${OBJ[x[0]]} ${x[2]}<div class="barre"><div style="width:${p}%"></div></div></div>`}).join('')+
-'<h2>Coller depuis Claude</h2><div class="coller"><select id="momentC">'+['Petit-déjeuner','Repas','Collation','Dîner','Avant coucher'].map(m=>`<option>${m}</option>`).join('')+'</select><textarea id="colle" placeholder="Colle ici la liste de Claude, une ligne par aliment. Exemple :&#10;Riz cuit : 200 g&#10;Sauce arachide : 150 g"></textarea><button onclick="coller()">Ajouter les aliments</button>'+(message?'<p class="info">'+message+'</p>':'')+'</div>'+
-'<h2>Ajouter à la main</h2><select id="moment">'+['Petit-déjeuner','Repas','Collation','Dîner','Avant coucher'].map(m=>`<option>${m}</option>`).join('')+'</select><select id="alim">'+tous().map(a=>`<option value="${a.id}">${a.nom}</option>`).join('')+'</select><input type="number" id="gr" value="200"> g <button onclick="ajouter()">Ajouter</button>'+
-'<h2>Repas du jour</h2>'+(rj.length?rj.map(r=>{const a=tous().find(x=>x.id===r.alimentId);if(!a)return'';const v=val(a,r.grammes);return `<div class="repas"><b>${r.moment}</b> : ${a.nom}, <input type="number" value="${r.grammes}" style="width:70px" onchange="modif(${r.id},this.value)"> g (${v.kcal.toFixed(0)} kcal, ${v.p.toFixed(1)} g prot.) <button onclick="suppr(${r.id})">Supprimer</button></div>`}).join(''):'<p>Aucun repas pour l\'instant.</p>');
+c.innerHTML=
+'<div class="carte"><h2>🔥 Objectifs du jour</h2><div class="anneaux">'+anneau('kcal','Calories','kcal','#d9a05b',t)+anneau('p','Protéines','g','#5f9e4e',t)+anneau('g','Glucides','g','#c0505f',t)+'</div></div>'+
+'<div class="carte"><h2>🧬 Micronutriments</h2>'+['l','zn','mg','fe','ca','b12'].map(k=>{const x=CH.find(y=>y[0]===k);const p=Math.min(100,t[k]/OBJ[k]*100);return `<div class="micro ${k==='l'?'macro-or':''}"><div class="tete"><span>${x[1]}</span><em>${t[k].toFixed(1)} / ${OBJ[k]} ${x[2]}</em></div><div class="barre"><div style="width:${p}%"></div></div></div>`}).join('')+'</div>'+
+'<div class="carte coller"><h2>📸 Coller depuis Claude</h2><select id="momentC">'+MOMENTS.map(m=>`<option>${m}</option>`).join('')+'</select><textarea id="colle" placeholder="Colle ici la liste de Claude, une ligne par aliment. Exemple :&#10;Riz cuit : 200 g&#10;Sauce arachide : 150 g"></textarea><button class="or large" onclick="coller()">Ajouter les aliments</button>'+(message?'<p class="info">'+message+'</p>':'')+'</div>'+
+'<div class="carte"><h2>➕ Ajouter à la main</h2><select id="moment">'+MOMENTS.map(m=>`<option>${m}</option>`).join('')+'</select><select id="alim">'+tous().map(a=>`<option value="${a.id}">${a.nom}</option>`).join('')+'</select><div class="rang"><input type="number" id="gr" value="200"><span>g</span><button onclick="ajouter()">Ajouter</button></div></div>'+
+'<div class="carte"><h2>🍲 Repas du jour</h2>'+(rj.length?rj.map(r=>{const a=tous().find(x=>x.id===r.alimentId);if(!a)return'';const v=val(a,r.grammes);return `<div class="repas"><div class="haut"><div><div class="moment">${r.moment}</div><div class="nom">${a.nom}</div></div><button class="petit" onclick="suppr(${r.id})">Supprimer</button></div><div class="det"><input type="number" value="${r.grammes}" onchange="modif(${r.id},this.value)"> g · ${v.kcal.toFixed(0)} kcal · ${v.p.toFixed(1)} g prot.</div></div>`}).join(''):'<p style="color:var(--gris)">Aucun repas pour l\'instant.</p>')+'</div>';
 }else if(onglet==='seance'){
-c.innerHTML=`<h2>${s.jour} : ${s.titre}</h2>`+(s.exos.length?s.exos.map((e,i)=>`<label class="exo"><input type="checkbox" ${co[i]?'checked':''} onchange="cocher(${i})"><span>${e[0]} : ${e[1]}, repos ${e[2]}</span></label>`).join(''):'<p>Jour de repos. Récupère bien.</p>');
+const fait=Object.values(co).filter(Boolean).length;const nb=s.exos.length;
+c.innerHTML=`<div class="carte"><h2>💪 ${s.jour} : ${s.titre}</h2>`+(nb?`<div class="progres"><span>${fait}/${nb}</span><div class="barre"><div style="width:${fait/nb*100}%"></div></div></div>`+s.exos.map((e,i)=>`<label class="exo"><input type="checkbox" ${co[i]?'checked':''} onchange="cocher(${i})"><div><div class="t">${e[0]}</div><div class="s">${e[1]} · repos ${e[2]}</div></div></label>`).join(''):'<div class="repos"><div class="gros">😴</div><p>Jour de repos. Mange bien, dors bien, récupère.</p></div>')+'</div>';
 }else if(onglet==='aliments'){
-c.innerHTML='<h2>Ajouter un aliment (pour 100 g)</h2><form onsubmit="ajAl(event)"><input name="nom" placeholder="Nom" required>'+CH.map(x=>`<input name="${x[0]}" type="number" step="any" placeholder="${x[1]} (${x[2]})">`).join('')+'<button type="submit">Enregistrer</button></form><h2>Mes aliments</h2>'+(D.aliments.length?D.aliments.map(a=>`<div>${a.nom} : ${a.kcal} kcal</div>`).join(''):'<p>Aucun aliment personnalisé.</p>');
+c.innerHTML='<div class="carte"><h2>➕ Nouvel aliment (pour 100 g)</h2><form class="grille" onsubmit="ajAl(event)"><input class="plein" name="nom" placeholder="Nom de l\'aliment" required>'+CH.map(x=>`<input name="${x[0]}" type="number" step="any" placeholder="${x[1]} (${x[2]})">`).join('')+'<button class="or" type="submit">Enregistrer</button></form></div><div class="carte"><h2>🥗 Mes aliments</h2>'+(D.aliments.length?D.aliments.map(a=>`<div class="repas"><span class="nom">${a.nom}</span> · ${a.kcal} kcal / 100 g</div>`).join(''):'<p style="color:var(--gris)">Aucun aliment personnalisé.</p>')+'</div>';
 }else{
 const js=Object.keys(Object.assign({},D.repas,D.seances,D.poids)).sort().reverse();
-c.innerHTML='<h2>Poids du jour</h2><form onsubmit="poids(event)"><input name="poids" type="number" step="0.1" placeholder="kg"><button type="submit">Enregistrer</button></form><h2>Jours enregistrés</h2>'+js.map(j=>{const tt=total(D.repas[j]||[]);const nb=Object.values(D.seances[j]||{}).filter(Boolean).length;return `<div class="repas">${j} : ${tt.kcal.toFixed(0)} kcal, ${tt.p.toFixed(0)} g prot., ${nb} exercices cochés${D.poids[j]?', '+D.poids[j]+' kg':''}</div>`}).join('');
+c.innerHTML='<div class="carte"><h2>⚖️ Poids du jour</h2><form onsubmit="poids(event)"><div class="rang"><input name="poids" type="number" step="0.1" placeholder="kg"><button class="or" type="submit">Enregistrer</button></div></form></div><div class="carte"><h2>📈 Jours enregistrés</h2>'+(js.length?js.map(j=>{const tt=total(D.repas[j]||[]);const nb=Object.values(D.seances[j]||{}).filter(Boolean).length;return `<div class="jour-hist"><b>${j}</b><br>${tt.kcal.toFixed(0)} kcal · ${tt.p.toFixed(0)} g prot. · ${nb} exercices cochés${D.poids[j]?' · '+D.poids[j]+' kg':''}</div>`}).join(''):'<p style="color:var(--gris)">Rien d\'enregistré pour l\'instant.</p>')+'</div>';
 }}
 function coller(){const txt=document.getElementById('colle').value;const mom=document.getElementById('momentC').value;const ok=[],ko=[];
 txt.split(/\n/).forEach(l=>{const m=l.match(/^\s*[-\u2022*]?\s*(.+?)\s*[:=]\s*(?:environ\s*|~\s*)?([0-9]+(?:[.,][0-9]+)?)\s*g/i);if(!m)return;const a=trouver(m[1]);const g=Number(m[2].replace(',','.'));if(a&&g){D.repas[jour]=D.repas[jour]||[];D.repas[jour].push({id:Date.now()+Math.random(),alimentId:a.id,grammes:g,moment:mom});ok.push(a.nom)}else ko.push(m[1])});
@@ -100,7 +150,7 @@ sauver();rendre()}
 function modif(id,g){const r=(D.repas[jour]||[]).find(x=>x.id===id);if(r&&Number(g)>0){r.grammes=Number(g);sauver();rendre()}}
 function ajouter(){const g=Number(document.getElementById('gr').value);if(!g)return;D.repas[jour]=D.repas[jour]||[];D.repas[jour].push({id:Date.now(),alimentId:document.getElementById('alim').value,grammes:g,moment:document.getElementById('moment').value});sauver();rendre()}
 function suppr(id){D.repas[jour]=D.repas[jour].filter(r=>r.id!==id);sauver();rendre()}
-function cocher(i){D.seances[jour]=D.seances[jour]||{};D.seances[jour][i]=!D.seances[jour][i];sauver()}
+function cocher(i){D.seances[jour]=D.seances[jour]||{};D.seances[jour][i]=!D.seances[jour][i];sauver();rendre()}
 function ajAl(e){e.preventDefault();const f=new FormData(e.target);const a={id:'perso-'+Date.now(),nom:f.get('nom')};CH.forEach(c=>a[c[0]]=Number(f.get(c[0]))||0);D.aliments.push(a);sauver();rendre()}
 function poids(e){e.preventDefault();const p=Number(new FormData(e.target).get('poids'));if(p){D.poids[jour]=p;sauver();rendre()}}
 document.getElementById('jour').onchange=e=>{jour=e.target.value;rendre()};
