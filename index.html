@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#7a1f2b">
+<link rel="manifest" href="manifest.json">
+<title>Suivi Repas et Muscu</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:system-ui,sans-serif;background:#1a1a1a;color:#f2ece8}
+.app{max-width:480px;margin:0 auto;padding:12px}
+header{display:flex;justify-content:space-between;align-items:center;gap:8px}
+h1{font-size:1.1rem;color:#d9a05b}
+h2{font-size:1rem;margin-top:18px;color:#d9a05b}
+nav{display:flex;gap:6px;margin:10px 0}
+nav button{flex:1;padding:10px 4px;border:0;border-radius:8px;background:#2c2c2c;color:#f2ece8}
+nav button.actif{background:#7a1f2b}
+select,input,textarea{padding:8px;margin:4px 4px 4px 0;border-radius:6px;border:1px solid #444;background:#2c2c2c;color:#f2ece8}
+textarea{width:100%;min-height:110px;font-family:inherit}
+button{padding:8px 12px;border:0;border-radius:6px;background:#7a1f2b;color:#fff}
+.ligne{margin:6px 0;font-size:.9rem}
+.barre{height:8px;background:#2c2c2c;border-radius:4px;overflow:hidden}
+.barre div{height:100%;background:#5f8f4e}
+.repas,.exo{display:block;padding:8px;margin:6px 0;background:#2c2c2c;border-radius:8px}
+.exo{display:flex;gap:8px;align-items:center}
+.info{color:#d9a05b}
+.coller{background:#232323;border:1px dashed #d9a05b;border-radius:8px;padding:8px;margin:8px 0}
+form{display:flex;flex-wrap:wrap;gap:4px}
+</style>
+</head>
+<body>
+<div class="app">
+<header><h1>Suivi Repas et Muscu</h1><input type="date" id="jour"></header>
+<nav id="nav"></nav>
+<div id="contenu"></div>
+</div>
+<script>
+const FOODS=[
+{id:'riz',nom:'Riz cuit',kcal:130,p:2.7,g:28,l:0.3,zn:0.5,mg:12,fe:0.2,ca:10,b12:0},
+{id:'attieke',nom:'Attiéké',kcal:150,p:1,g:36,l:0.2,zn:0.2,mg:15,fe:0.5,ca:15,b12:0},
+{id:'pate-mais',nom:'Pâte de maïs',kcal:110,p:2.5,g:24,l:0.8,zn:0.4,mg:20,fe:0.5,ca:5,b12:0},
+{id:'haricot-rouge',nom:'Haricots rouges cuits',kcal:127,p:8.7,g:22.8,l:0.5,zn:1.9,mg:45,fe:2.2,ca:28,b12:0},
+{id:'haricot-blanc',nom:'Haricots blancs cuits',kcal:140,p:9.7,g:25,l:0.5,zn:1.8,mg:63,fe:3.7,ca:90,b12:0},
+{id:'vanzou',nom:'Vanzou (pois chiches) cuits',kcal:164,p:8.9,g:27,l:2.6,zn:1.5,mg:48,fe:2.9,ca:49,b12:0},
+{id:'oeuf',nom:'Œuf entier',kcal:143,p:12.6,g:0.7,l:9.5,zn:1.3,mg:12,fe:1.8,ca:56,b12:1.1},
+{id:'sauce-graine',nom:'Sauce graine',kcal:150,p:3,g:5,l:13,zn:0.8,mg:20,fe:1,ca:20,b12:0},
+{id:'sauce-arachide',nom:'Sauce arachide',kcal:190,p:7,g:8,l:15,zn:1,mg:50,fe:1,ca:25,b12:0},
+{id:'sauce-manioc',nom:'Sauce feuilles de manioc',kcal:110,p:4,g:6,l:8,zn:0.7,mg:40,fe:1.5,ca:80,b12:0},
+{id:'sauce-basilic',nom:'Sauce feuilles de basilic',kcal:90,p:3,g:4,l:7,zn:0.6,mg:35,fe:1.5,ca:70,b12:0},
+{id:'bouillie-soja',nom:'Bouillie de soja',kcal:60,p:3,g:8,l:2,zn:0.4,mg:20,fe:0.8,ca:20,b12:0},
+{id:'cacao',nom:'Cacao (poudre)',kcal:230,p:20,g:58,l:14,zn:6.8,mg:499,fe:13.9,ca:128,b12:0},
+{id:'arachide',nom:'Arachides',kcal:567,p:26,g:16,l:49,zn:3.3,mg:168,fe:4.6,ca:92,b12:0}
+];
+const PROGRAM={
+0:{jour:'Dimanche',titre:'Poussée',exos:[['Développé couché barre','4 × 8-10','2-3 min'],['Développé incliné haltères','3 × 10-12','2 min'],['Développé militaire barre','3 × 10','2 min'],['Élévations latérales','3 × 15','1 min'],['Extensions triceps','3 × 12','1 min']]},
+1:{jour:'Lundi',titre:'Tirage',exos:[['Tractions','4 × max','2-3 min'],['Rowing barre penché','4 × 10','2 min'],['Rowing un bras haltère','3 × 12','1 min 30'],['Oiseau haltères','3 × 15','1 min'],['Curl barre','3 × 10','1 min 30']]},
+2:{jour:'Mardi',titre:'Jambes',exos:[['Squat barre','4 × 8-10','2-3 min'],['Soulevé de terre roumain','3 × 10','2 min'],['Fentes bulgares','3 × 10 par jambe','1 min 30'],['Hip thrust sur le banc','3 × 12','1 min 30'],['Mollets','4 × 15-20','1 min']]},
+3:{jour:'Mercredi',titre:'Haut du corps',exos:[['Développé incliné barre','3 × 10','2 min'],['Tractions prise serrée','3 × max','2-3 min'],['Développé militaire haltères','3 × 12','2 min'],['Curl marteau','3 × 12','1 min'],['Triceps haltère au-dessus de la tête','3 × 12','1 min']]},
+4:{jour:'Jeudi',titre:'Bas du corps et abdos',exos:[['Squat avant','3 × 10','2-3 min'],['Step-ups','3 × 12 par jambe','1 min 30'],['Soulevé de terre roumain une jambe','3 × 10 par jambe','1 min 30'],['Gainage','3 × 30-45 s','1 min'],['Relevés de jambes','3 × 12','1 min']]},
+5:{jour:'Vendredi',titre:'Repos',exos:[]},
+6:{jour:'Samedi',titre:'Repos',exos:[]}
+};
+const OBJ={kcal:2900,p:140,g:380,l:90,zn:11,mg:400,fe:8,ca:1000,b12:2.4};
+const CH=[['kcal','Calories','kcal'],['p','Protéines','g'],['g','Glucides','g'],['l','Lipides','g'],['zn','Zinc','mg'],['mg','Magnésium','mg'],['fe','Fer','mg'],['ca','Calcium','mg'],['b12','Vitamine B12','µg']];
+const CLE='suivi-muscu-v1';
+let D;try{D=JSON.parse(localStorage.getItem(CLE))}catch(e){}
+D=D||{repas:{},seances:{},aliments:[],poids:{}};
+const sauver=()=>localStorage.setItem(CLE,JSON.stringify(D));
+const auj=()=>{const d=new Date();return new Date(d-d.getTimezoneOffset()*60000).toISOString().slice(0,10)};
+let jour=auj(),onglet='aujourdhui',message='';
+const tous=()=>FOODS.concat(D.aliments);
+const norm=s=>s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9 ]/g,' ').replace(/\s+/g,' ').trim();
+function val(a,g){const r={};CH.forEach(c=>r[c[0]]=(a[c[0]]||0)*g/100);return r}
+function total(liste){const t={};CH.forEach(c=>t[c[0]]=0);liste.forEach(r=>{const a=tous().find(x=>x.id===r.alimentId);if(!a)return;const v=val(a,r.grammes);CH.forEach(c=>t[c[0]]+=v[c[0]])});return t}
+function trouver(nom){const n=norm(nom);let a=tous().find(x=>norm(x.nom)===n);if(a)return a;a=tous().find(x=>norm(x.nom).includes(n)||n.includes(norm(x.nom)));if(a)return a;const mots=n.split(' ').filter(m=>m.length>3);return tous().find(x=>mots.some(m=>norm(x.nom).includes(m)))}
+function nav(){const n=[['aujourdhui',"Aujourd'hui"],['seance','Séance'],['aliments','Aliments'],['historique','Historique']];
+document.getElementById('nav').innerHTML=n.map(o=>`<button class="${onglet===o[0]?'actif':''}" onclick="onglet='${o[0]}';rendre()">${o[1]}</button>`).join('')}
+function rendre(){nav();document.getElementById('jour').value=jour;
+const c=document.getElementById('contenu');
+const rj=D.repas[jour]||[];const t=total(rj);
+const num=new Date(jour+'T12:00:00').getDay();const s=PROGRAM[num];const co=D.seances[jour]||{};
+if(onglet==='aujourdhui'){
+c.innerHTML='<h2>Totaux du jour</h2>'+CH.map(x=>{const p=Math.min(100,t[x[0]]/OBJ[x[0]]*100);return `<div class="ligne">${x[1]} : ${t[x[0]].toFixed(1)} / ${OBJ[x[0]]} ${x[2]}<div class="barre"><div style="width:${p}%"></div></div></div>`}).join('')+
+'<h2>Coller depuis Claude</h2><div class="coller"><select id="momentC">'+['Petit-déjeuner','Repas','Collation','Dîner','Avant coucher'].map(m=>`<option>${m}</option>`).join('')+'</select><textarea id="colle" placeholder="Colle ici la liste de Claude, une ligne par aliment. Exemple :&#10;Riz cuit : 200 g&#10;Sauce arachide : 150 g"></textarea><button onclick="coller()">Ajouter les aliments</button>'+(message?'<p class="info">'+message+'</p>':'')+'</div>'+
+'<h2>Ajouter à la main</h2><select id="moment">'+['Petit-déjeuner','Repas','Collation','Dîner','Avant coucher'].map(m=>`<option>${m}</option>`).join('')+'</select><select id="alim">'+tous().map(a=>`<option value="${a.id}">${a.nom}</option>`).join('')+'</select><input type="number" id="gr" value="200"> g <button onclick="ajouter()">Ajouter</button>'+
+'<h2>Repas du jour</h2>'+(rj.length?rj.map(r=>{const a=tous().find(x=>x.id===r.alimentId);if(!a)return'';const v=val(a,r.grammes);return `<div class="repas"><b>${r.moment}</b> : ${a.nom}, <input type="number" value="${r.grammes}" style="width:70px" onchange="modif(${r.id},this.value)"> g (${v.kcal.toFixed(0)} kcal, ${v.p.toFixed(1)} g prot.) <button onclick="suppr(${r.id})">Supprimer</button></div>`}).join(''):'<p>Aucun repas pour l\'instant.</p>');
+}else if(onglet==='seance'){
+c.innerHTML=`<h2>${s.jour} : ${s.titre}</h2>`+(s.exos.length?s.exos.map((e,i)=>`<label class="exo"><input type="checkbox" ${co[i]?'checked':''} onchange="cocher(${i})"><span>${e[0]} : ${e[1]}, repos ${e[2]}</span></label>`).join(''):'<p>Jour de repos. Récupère bien.</p>');
+}else if(onglet==='aliments'){
+c.innerHTML='<h2>Ajouter un aliment (pour 100 g)</h2><form onsubmit="ajAl(event)"><input name="nom" placeholder="Nom" required>'+CH.map(x=>`<input name="${x[0]}" type="number" step="any" placeholder="${x[1]} (${x[2]})">`).join('')+'<button type="submit">Enregistrer</button></form><h2>Mes aliments</h2>'+(D.aliments.length?D.aliments.map(a=>`<div>${a.nom} : ${a.kcal} kcal</div>`).join(''):'<p>Aucun aliment personnalisé.</p>');
+}else{
+const js=Object.keys(Object.assign({},D.repas,D.seances,D.poids)).sort().reverse();
+c.innerHTML='<h2>Poids du jour</h2><form onsubmit="poids(event)"><input name="poids" type="number" step="0.1" placeholder="kg"><button type="submit">Enregistrer</button></form><h2>Jours enregistrés</h2>'+js.map(j=>{const tt=total(D.repas[j]||[]);const nb=Object.values(D.seances[j]||{}).filter(Boolean).length;return `<div class="repas">${j} : ${tt.kcal.toFixed(0)} kcal, ${tt.p.toFixed(0)} g prot., ${nb} exercices cochés${D.poids[j]?', '+D.poids[j]+' kg':''}</div>`}).join('');
+}}
+function coller(){const txt=document.getElementById('colle').value;const mom=document.getElementById('momentC').value;const ok=[],ko=[];
+txt.split(/\n/).forEach(l=>{const m=l.match(/^\s*[-\u2022*]?\s*(.+?)\s*[:=]\s*(?:environ\s*|~\s*)?([0-9]+(?:[.,][0-9]+)?)\s*g/i);if(!m)return;const a=trouver(m[1]);const g=Number(m[2].replace(',','.'));if(a&&g){D.repas[jour]=D.repas[jour]||[];D.repas[jour].push({id:Date.now()+Math.random(),alimentId:a.id,grammes:g,moment:mom});ok.push(a.nom)}else ko.push(m[1])});
+message=ok.length?ok.length+' aliment(s) ajouté(s). Corrige les grammes ci-dessous si besoin.':'Aucune ligne reconnue.';if(ko.length)message+=' Non reconnus : '+ko.join(', ')+' (ajoute-les dans l\'onglet Aliments).';
+sauver();rendre()}
+function modif(id,g){const r=(D.repas[jour]||[]).find(x=>x.id===id);if(r&&Number(g)>0){r.grammes=Number(g);sauver();rendre()}}
+function ajouter(){const g=Number(document.getElementById('gr').value);if(!g)return;D.repas[jour]=D.repas[jour]||[];D.repas[jour].push({id:Date.now(),alimentId:document.getElementById('alim').value,grammes:g,moment:document.getElementById('moment').value});sauver();rendre()}
+function suppr(id){D.repas[jour]=D.repas[jour].filter(r=>r.id!==id);sauver();rendre()}
+function cocher(i){D.seances[jour]=D.seances[jour]||{};D.seances[jour][i]=!D.seances[jour][i];sauver()}
+function ajAl(e){e.preventDefault();const f=new FormData(e.target);const a={id:'perso-'+Date.now(),nom:f.get('nom')};CH.forEach(c=>a[c[0]]=Number(f.get(c[0]))||0);D.aliments.push(a);sauver();rendre()}
+function poids(e){e.preventDefault();const p=Number(new FormData(e.target).get('poids'));if(p){D.poids[jour]=p;sauver();rendre()}}
+document.getElementById('jour').onchange=e=>{jour=e.target.value;rendre()};
+rendre();
+if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js');
+</script>
+</body>
+</html>
